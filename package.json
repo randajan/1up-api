@@ -1,0 +1,34 @@
+{
+  "name": "@randajan/1up-api",
+  "version": "0.0.1",
+  "description": "API for 1up.cz",
+  "repository": "randajan/1up-api",
+  "type": "module",
+  "main": "dist/cjs/index.cjs",
+  "module": "dist/esm/index.mjs",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.mjs",
+      "require": "./dist/cjs/index.cjs"
+    }
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@randajan/simple-lib": "^3.3.0"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [],
+  "homepage": "https://github.com/randajan/1up-api",
+  "bugs": {
+    "url": "https://github.com/randajan/1up-api/issues"
+  },
+  "author": {
+    "name": "Jan Randa",
+    "email": "jnranda@gmail.com",
+    "url": "https://www.linkedin.com/in/randajan/"
+  }
+}
