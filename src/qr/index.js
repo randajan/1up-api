@@ -1,4 +1,4 @@
-import { Qr1up } from "./qr";
+import { Qr1up } from "./class/Qr1up";
 
 export default Qr1up;
 

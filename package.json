@@ -10,11 +10,16 @@
     ".": {
       "import": "./dist/esm/index.mjs",
       "require": "./dist/cjs/index.cjs"
+    },
+    "./consts": {
+      "import": "./dist/esm/consts.mjs",
+      "require": "./dist/cjs/consts.cjs"
     }
   },
   "license": "MIT",
   "devDependencies": {
-    "@randajan/simple-lib": "^3.3.0"
+    "@randajan/simple-lib": "^3.3.0",
+    "esbuild-plugin-import-glob": "^0.1.1"
   },
   "files": [
     "dist",
@@ -30,5 +35,8 @@
     "name": "Jan Randa",
     "email": "jnranda@gmail.com",
     "url": "https://www.linkedin.com/in/randajan/"
+  },
+  "dependencies": {
+    "@randajan/props": "^0.1.4"
   }
 }
