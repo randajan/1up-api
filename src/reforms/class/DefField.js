@@ -16,7 +16,7 @@ export class DefField {
     constructor(group, id, type, fieldDef={}) {
         if (!(type instanceof DefType)) { throw new Error("DefField requires valid DefType"); }
 
-        const d = type.def({...fieldDef});
+        const d = type.defs({...fieldDef});
 
         d.id = id;
         d.group = group;
@@ -59,7 +59,7 @@ export class DefField {
 
         computed[id] = value;
         if (isShown) {
-            const required = req(computed);
+            const required = req(computed, opt);
             if (required && isEmpty(computed[id])) { pushIssue("required", "critical"); }
         }
 

@@ -10,7 +10,7 @@ const defineDefaultTypes = () => {
             if (value === "true" || value === "1") { return true; }
             return Boolean(value);
         },
-        def: {
+        defs: {
             fb:false
         }
     }));
@@ -37,7 +37,7 @@ const defineDefaultTypes = () => {
     })
     
     types.set("number", number);
-    types.set("range", DefType.extend(number, "range", { def: { min:0, max:1, step:0.05 } }));
+    types.set("range", DefType.extend(number, "range", { defs: { min:0, max:1, step:0.05 } }));
 
     types.set("enum", DefType.create("enum", {
         format: (field, value, pushIssue, computed) => {
@@ -53,7 +53,7 @@ const defineDefaultTypes = () => {
             if (num != null && enm.includes(num)) { return num; }
             pushIssue("invalid", "major", [...enm]);
         },
-        def: (opt) => {
+        defs: (opt) => {
             const { enm } = opt;
             const isArray = Array.isArray(enm);
 
@@ -83,14 +83,14 @@ const defineDefaultTypes = () => {
 
             return out;
         },
-        def: { max:255 }
+        defs: { max:255 }
     });
 
     types.set("text", textType);
-    types.set("textarea", DefType.extend(textType, "textarea", { def: { max:12000 } }));
-    types.set("date", DefType.extend(textType, "date", { def: { max:10 } }));
-    types.set("color", DefType.extend(textType, "color", { def: { max:9 } }));
-    types.set("file", DefType.extend(textType, "file", { def: { max:-1 } }));
+    types.set("textarea", DefType.extend(textType, "textarea", { defs: { max:12000 } }));
+    types.set("date", DefType.extend(textType, "date", { defs: { max:10 } }));
+    types.set("color", DefType.extend(textType, "color", { defs: { max:9 } }));
+    types.set("file", DefType.extend(textType, "file", { defs: { max:-1 } }));
 
     types.set("url", DefType.extend(textType, "url", {
         format: (_field, value, pushIssue) => {
@@ -98,7 +98,7 @@ const defineDefaultTypes = () => {
                 pushIssue("invalid", "critical");
             }
         },
-        def: { max:2048 }
+        defs: { max:2048 }
     }));
 
     types.set("email", DefType.extend(textType, "email", {
@@ -106,7 +106,7 @@ const defineDefaultTypes = () => {
             if (!value || value.includes("@")) { return value; }
             pushIssue("invalid", "critical");
         },
-        def: { max:320 }
+        defs: { max:320 }
     }));
 
     types.set("symbol", DefType.extend(textType, "symbol", {

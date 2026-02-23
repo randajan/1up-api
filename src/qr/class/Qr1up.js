@@ -1,19 +1,26 @@
 
-import { _privs } from "../vault";
 import { configForm } from "../../forms/configForm";
-
-console.log(configForm.format({}));
+import { solids } from "@randajan/props";
 
 
 export class Qr1up {
     constructor(opt={}) {
-        _privs.set(this, opt)
+        const { fetch, token } = opt;
+        solids(this, {
+            fetch, token
+        })
+    }
+
+    formatConfig(input) {
+        return configForm.format(input, { isApi:true });
     }
 
     fetch() {
         
     }
 }
+
+console.log((new Qr1up({})).formatConfig({token:"a1d96ed450c56810296517a76a4527f8", ecc:"Q", url:"https://fkdgf"}).issues);
 
 
 export const qrbFetchSvg = async (content, level = 2, size=100) => {

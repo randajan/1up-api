@@ -1,14 +1,14 @@
 import { solids } from "@randajan/props";
 import { fnOnly, fnPass, isFn } from "../../tools";
 
-const formatDef = (def, parentDef)=>{
-    const t = typeof def;
-    if (t === "function") { return (opt=>{ def(opt); parentDef?.(opt); return opt; }); }
+const formatDefs = (defs, parentDef)=>{
+    const t = typeof defs;
+    if (t === "function") { return (opt=>{ defs(opt); parentDef?.(opt); return opt; }); }
     if (t !== "object") { return parentDef || fnPass; }
 
     return opt=>{
-        for (const i in def) {
-            if (opt[i] == null) { opt[i] = def[i]; }
+        for (const i in defs) {
+            if (opt[i] == null) { opt[i] = defs[i]; }
         }
         parentDef?.(opt);
         return opt;
@@ -35,14 +35,14 @@ export class DefType {
     }
 
     constructor(id, opt={}, parent) {
-        const { def, format } = opt;
+        const { defs, format } = opt;
         if (!id) { throw new Error("Type requires 'id'"); }
 
         solids(this, {
             id,
             parent,
             root:parent?.root || this,
-            def:formatDef(def, parent?.def),
+            defs:formatDefs(defs, parent?.defs),
             format:formatFormat(format, parent?.format)
         });
 

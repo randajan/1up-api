@@ -73,16 +73,16 @@ export const styleForm = new Form("style", {
     },
     types: define => {
         define({
-            "form": { type: "enum", def:{ enm: ["merge", "split", "solid"] } },
-            "strokeWidth": { type: "range", def:{ fb: 0 } },
-            "opacity": { type: "range", def:{ fb: 1 } },
-            "corner": { type: "enum", def:{ enm: ["basic", "zoned", "sided", "all"] } },
+            "form": { type: "enum", defs:{ enm: ["merge", "split", "solid"] } },
+            "strokeWidth": { type: "range", defs:{ fb: 0 } },
+            "opacity": { type: "range", defs:{ fb: 1 } },
+            "corner": { type: "enum", defs:{ enm: ["basic", "zoned", "sided", "all"] } },
             "cornerRadius": { type: "range" },
-            "cornerType": { type: "enum", def:{ enm: ["arc", "cut", "step"] } },
-            "cornerSteps": { type: "enum", def:{ enm: [1, 2, 3] } },
-            "white": { type: "color", def:{ fb: "#FFFFFF" } },
-            "gray": { type: "color", def:{ fb: "#444444" } },
-            "black": { type: "color", def:{ fb: "#000000" } }
+            "cornerType": { type: "enum", defs:{ enm: ["arc", "cut", "step"] } },
+            "cornerSteps": { type: "enum", defs:{ enm: [1, 2, 3] } },
+            "white": { type: "color", defs:{ fb: "#FFFFFF" } },
+            "gray": { type: "color", defs:{ fb: "#444444" } },
+            "black": { type: "color", defs:{ fb: "#000000" } }
         });
     },
     fields: define => {
