@@ -12,7 +12,7 @@ export class Form {
         const _p = {};
 
         _p.normalize = typeof normalize == "function" ? normalize : fnPass;
-        _p.format = typeof format == "function" ? format : fnPass;
+        _p.format = typeof format == "function" ? format : ({computed})=>computed;
 
         solid(this, "id", id);
         cached(_p, {}, "fields", _=>new Fields(types, fields));
@@ -29,8 +29,8 @@ export class Form {
 
     format(input = {}, opt={}) {
         const { format, fields } = _privs.get(this);
-        const { collector, collect } = opt;
-        const out = { computed:{}, issues:{}, input, collector };
+        const { collector, collect, issues=[], tag, issueTreshold } = opt;
+        const out = { computed:{}, issues:issues, input, collector, tag };
 
         const normalized = this.normalize(input);
         for (const field of fields.values()) {
@@ -38,7 +38,15 @@ export class Form {
             if (collect) { collect(collector, r); }
         }
 
-        if (!out.issues.critical?.length) {
+        if (out.issues.maxLevel >= issueTreshold) {
+            const isf = out.issues.filter(s=>s.level >= issueTreshold)
+            if (isf.length === 1) { throw new Error(`Failed to format due to issue: ${isf[0].simplify()}`); }
+            const isl = isf.sort((a, b)=>b.level-a.level).map(((s, k)=>(` Issue[${k}]: ${s.simplify()}`))).join("\n");
+            throw new Error(`Failed to format due to multiple issues:\n${isl}`);
+        }
+
+
+        if (!(out.issues.maxLevel >= 2)) {
             out.result = format(out, opt);
         }
         

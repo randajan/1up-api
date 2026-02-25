@@ -37,6 +37,7 @@
     "url": "https://www.linkedin.com/in/randajan/"
   },
   "dependencies": {
-    "@randajan/props": "^0.1.4"
+    "@randajan/props": "^0.1.4",
+    "node-fetch": "^3.3.2"
   }
 }

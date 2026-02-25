@@ -68,9 +68,6 @@ const defineCorners = (prefixId, parentFallback) => {
 }
 
 export const styleForm = new Form("style", {
-    format: ({ computed: style }) => {
-        return style;
-    },
     types: define => {
         define({
             "form": { type: "enum", defs:{ enm: ["merge", "split", "solid"] } },
@@ -142,7 +139,7 @@ export const styleForm = new Form("style", {
         });
 
         define("lbl", {
-            "lblPos": { type: "enum", enm: getLblPosEnum, fb: "B", showIf: ({ padding }) => padding >= 0.1 },
+            "lblPos": { type: "enum", enm: getLblPosEnum, fb: ({padding})=>padding >= 0.1 ? "B" : "none", showIf: ({ padding }) => padding >= 0.1 },
             "lblValue": { type: "text", showIf: ({ lblPos }) => lblPos !== "none" },
             "lblScale": { type: "range", min: -0.5, max: 0.5, step: 0.01, fb: 0, showIf: ({ lblPos }) => (lblPos !== "none") },
             "lblGap": { type: "range", min: 0, max: 0.9, step: 0.01, fb: 0.4, showIf: ({ lblPos }) => (lblPos !== "none") },

@@ -8,3 +8,5 @@ export const CORNERS_ZONES = ["outer", "inner"];
 
 export const LABEL_POS_VRT = ["none", "T", "B"];
 export const LABEL_POS_ALL = [...LABEL_POS_VRT, ...CORNERS_SIDES];
+
+export const ISSUES_LEVEL = [ "minor", "major", "critical" ];

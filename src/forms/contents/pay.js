@@ -26,9 +26,9 @@ export const types = (define)=>{
 export const fields = (define) => {
 
     define("main", {
-        iban: { type: "text", placeholder: "CZ6508000000192000145399", req: true },
+        iban: { type: "text", placeholder: "CZ6508000000192000145399", min: 16, max:34, req:true },
         bic: { type: "text", placeholder: "GIBACZPX" },
-        amount: { type: "money", req:true },
+        amount: { type: "money", min:0.01, req:true },
         currency: { type: "enum", enm: ["CZK", "EUR", "USD"], fb: "CZK" },
         message: { type: "text", max:32 }
     });

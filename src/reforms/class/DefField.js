@@ -1,16 +1,8 @@
 import { DefType } from "./DefType.js";
 import { isEmpty, isFn } from "../../tools.js";
 import { solids } from "@randajan/props";
+import { issuesFactory } from "./Issue.js";
 
-const issuesFactory = (id, iss)=>{
-    const issues = [];
-    const pushIssue = (code, level, detail)=>{
-        const issue = {id, code, level, detail};
-        issues.push(issue); //local
-        (iss[level] || (iss[level] = [])).push(issue); //together
-    };
-    return [issues, pushIssue];
-}
 
 export class DefField {
     constructor(group, id, type, fieldDef={}) {
@@ -38,15 +30,18 @@ export class DefField {
         solids(this, d);
     }
 
-    collect(value, { computed, issues:iss }, opt={}) {
+    collect(value, context, opt={}) {
         const { id, type, showIf, fb, req } = this;
-        const [ issues, pushIssue ] = issuesFactory(id, iss);
+        const { computed } = context;
+        
+        const isc = issuesFactory(id, context);
+        const { pushIssue } = isc;
 
         const rawValue = value;
         const isShown = showIf(computed, opt);
 
         if (!isShown) {
-            if (value != null) { pushIssue("hidden", "minor"); }
+            if (value != null) { pushIssue(0, "hidden"); }
             value = undefined;
         } else if (value != null) {
             value = type.format(this, value, pushIssue, computed);
@@ -54,15 +49,15 @@ export class DefField {
 
         if (value == null) {
             value = fb(computed, opt);
-            if (value != null) { pushIssue("fallback", "minor", value); }
+            if (value != null) { pushIssue(0, "fallback", value); }
         }
 
         computed[id] = value;
         if (isShown) {
             const required = req(computed, opt);
-            if (required && isEmpty(computed[id])) { pushIssue("required", "critical"); }
+            if (required && isEmpty(computed[id])) { pushIssue(2, "required"); }
         }
 
-        return { field:this, rawValue, value, isShown, issues, computed };
+        return { field:this, rawValue, value, isShown, computed, issues:isc.issues };
     }
 }
