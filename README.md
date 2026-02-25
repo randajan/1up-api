@@ -1,71 +1,103 @@
-# @randajan/say
+# @randajan/1up-api
 
-[![NPM](https://img.shields.io/npm/v/@randajan/say.svg)](https://www.npmjs.com/package/@randajan/say) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
-
-A tiny, chainable phrase lookup helper for simple localization with fallbacks.
-
-This project is a small toy for experimenting with callable objects and minimal translation tables.
+Lightweight JavaScript client for the 1up.cz API used to generate styled QR codes.
 
 ## Installation
 
 ```bash
-npm install @randajan/say
+npm install @randajan/1up-api
 ```
 
-## Exports (CJS / ESM)
+## Import
 
 ESM:
 
 ```js
-import Say, { Say as SayClass } from "@randajan/say";
+import Qr1up from "@randajan/1up-api";
+// or:
+// import { Qr1up } from "@randajan/1up-api";
 ```
 
 CommonJS:
 
 ```js
-const Say = require("@randajan/say");
-const { Say: SayClass } = require("@randajan/say");
+const { Qr1up } = require("@randajan/1up-api");
 ```
 
-## API
+## Quick Example
 
-### `new Say(options)`
+```js
+import { Qr1up } from "@randajan/1up-api";
+import fetch from "node-fetch";
 
-Creates a callable instance that can be invoked like a function: `say("phraseId", "en")`.
+const qr = new Qr1up({
+  fetch,
+  token: "YOUR_1UP_TOKEN"
+});
 
-Options:
-- `langs` (`string[]`): Ordered list of language codes.
-- `translations` (`Record<string, string[]>`): Phrase table, where each entry aligns with `langs`.
-- `defaultLang` (`string`): Default language to use when none is provided. If omitted, `langs[0]` is used. Can be changed later via `setLang`.
-- `parent` (`Say | null`): Optional parent instance for fallback lookups.
+// Every method returns a response object.
+// It contains `issues` and may contain `body` and `error`.
+const response = await qr.svg(
+  {
+    contentType: "url",
+    url: "https://1up.cz"
+  },
+  false // throwError = false, so errors are returned in response.error
+);
 
-### `say(phraseId, lang?)`
+if (response.error) {
+  console.error(response.error.message);
+} else {
+  console.log(response.issues); // parsed validation/API issues
+  console.log(response.body);   // SVG text
+}
+```
 
-Returns the translation for `phraseId` in `lang` or the current default language. Falls back to `parent` if not found.
+## Qr1up
 
-### `bindLang(lang)`
+### `new Qr1up(options)`
 
-Returns a new instance with `defaultLang` set to `lang`, keeping the same language list and parent chain.
+Constructor options:
 
-### `setLang(lang)`
+- `fetch` (`function`, required): Fetch implementation (`globalThis.fetch`, `node-fetch`, ...).
+- `token` (`string`, required): API token.
+- `rootUrl` (`string`, optional): Defaults to `https://1up.cz/api/qr/gen`.
+- `filename` (`string`, optional): Defaults to `qr`.
+- `defaults` (`object`, optional): Default request payload merged into every call.
 
-Mutates the current instance by setting `defaultLang` to `lang` and returns the same instance.
+`defaults` are merged as `{...defaults, ...input}`. Values from `input` win.
 
-### `extend({ defaultLang, langs, translations } = {})`
+### Methods
 
-Creates a new instance that can override `defaultLang`, `langs`, or `translations` and chains the current instance as `parent`.
+- `svg(input = {}, throwError = true)`
+- `png(input = {}, throwError = true)`
+- `svgBuffer(input = {}, throwError = true)`
+- `pngBuffer(input = {}, throwError = true)`
 
-### `append(brother)`
+Shared method arguments:
 
-Appends another `Say` instance as a "brother" for fallback lookups. Returns the same instance. `brother` must be an instance of `Say`.
+- `input` (`object`): QR configuration and content fields based on `contentType`.
+- `throwError` (`boolean`):
+  - `true`: network/API failures throw `Error`
+  - `false`: failures are returned as `response.error`
 
-### `has(phraseId, lang?)`
+### Response Object
 
-Returns `true` if the phrase exists (including via fallback), otherwise `false`.
+All methods resolve to a response object with this shape:
 
-### `sayOr(phraseId, fallback, lang?)`
+```ts
+type QrResponse = {
+  issues?: Array<any>;
+  body?: string | Buffer;
+  error?: Error;
+};
+```
 
-Returns the phrase if found; otherwise returns `fallback`.
+Notes:
+
+- `issues` contains validation and API header issues (`x-qr-issues-*`).
+- `body` is `string` for `svg` and `png`, `Buffer` for `svgBuffer` and `pngBuffer`.
+- If request/processing fails and `throwError = false`, `error` is present.
 
 ## License
 

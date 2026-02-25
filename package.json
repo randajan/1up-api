@@ -11,9 +11,9 @@
       "import": "./dist/esm/index.mjs",
       "require": "./dist/cjs/index.cjs"
     },
-    "./consts": {
-      "import": "./dist/esm/consts.mjs",
-      "require": "./dist/cjs/consts.cjs"
+    "./4server": {
+      "import": "./dist/esm/4server.mjs",
+      "require": "./dist/cjs/4server.cjs"
     }
   },
   "license": "MIT",

@@ -33,7 +33,7 @@ const defineDefaultTypes = () => {
                 out = Math.min(max, out);
             }
 
-            return numFix(value);
+            return numFix(out);
         }
     })
     

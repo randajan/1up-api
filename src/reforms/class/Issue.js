@@ -39,7 +39,7 @@ export const issuesDeserialize = (prefix, headers)=>{
         if (!hid.startsWith(prefix)) { continue; }
         const severity = hid.slice(prefix.length);
         const level = ISSUES_LEVEL.indexOf(severity);
-        if (level == null) { continue; }
+        if (level < 0) { continue; }
         const raws = (headers[hid]).split(",");
         for (const raw of raws) {
             const issue = Issue.deserialize(level, raw);
@@ -49,6 +49,21 @@ export const issuesDeserialize = (prefix, headers)=>{
     }
 
     return issues;
+}
+
+export const issuesSerialize = (prefix, issues)=>{
+    const r = {};
+    if (!Array.isArray(issues)) { return r; }
+
+    for (const issue of issues) {
+        if (!(issue instanceof Issue)) { continue; }
+        const { severity } = issue;
+
+        const headerId = `${prefix}${severity}`;
+        (r[headerId] || (r[headerId] = [])).push(issue.serialize());
+    }
+
+    return r;
 }
 
 class Issue {

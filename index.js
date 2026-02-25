@@ -6,7 +6,7 @@ sapp(argv.isBuild, {
     mode:"node",
     lib:{
         entries:[
-            "index.js", "consts.js", "forms/configForm.js", "forms/styleForm.js", "forms/contentForms.js"
+            "index.js", "4server.js"
         ],
     },
     plugins:[
