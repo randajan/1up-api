@@ -1,7 +1,7 @@
 
 export const fields = (define) => {
     define("main", {
-        phone: { type: "text", placeholder: "+420123456789", req: true }
+        phone: { type: "phone", placeholder: "+420123456789", req: true }
     });
 };
 

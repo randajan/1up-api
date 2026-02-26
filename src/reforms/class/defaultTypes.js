@@ -113,7 +113,8 @@ const defineDefaultTypes = () => {
     types.set("textarea", DefType.extend(textType, "textarea", { defs: { max:12000 } }));
     types.set("date", DefType.extend(textType, "date", { defs: { max:10 } }));
     types.set("color", DefType.extend(textType, "color", { defs: { max:9 } }));
-    types.set("file", DefType.extend(textType, "file", { defs: { max:-1 } }));
+    types.set("file", DefType.extend(textType, "file", { defs: { max:0 } }));
+    types.set("phone", DefType.extend(textType, "phone", { defs: { max: 32 } }))
 
     types.set("url", DefType.extend(textType, "url", {
         format: (_field, value, pushIssue) => {

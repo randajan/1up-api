@@ -4,6 +4,7 @@ import { cached, solid } from "@randajan/props";
 import { _privs } from "../vault.js";
 import { Fields } from "./Fields.js";
 import { fnPass } from "../../tools.js";
+import { issuesValidate } from "./Issue.js";
 
 export class Form {
     constructor(id, opt = {}) {
@@ -38,13 +39,7 @@ export class Form {
             if (collect) { collect(collector, r); }
         }
 
-        if (out.issues.maxLevel >= issueTreshold) {
-            const isf = out.issues.filter(s=>s.level >= issueTreshold)
-            if (isf.length === 1) { throw new Error(`Failed to format due to issue: ${isf[0].simplify()}`); }
-            const isl = isf.sort((a, b)=>b.level-a.level).map(((s, k)=>(` Issue[${k}]: ${s.simplify()}`))).join("\n");
-            throw new Error(`Failed to format due to multiple issues:\n${isl}`);
-        }
-
+        issuesValidate(out.issues, issueTreshold);
 
         if (!(out.issues.maxLevel >= 2)) {
             out.result = format(out, opt);

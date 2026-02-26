@@ -3,6 +3,7 @@ export const fields = (define) => {
         content: {
             type: "textarea",
             placeholder: "Text",
+            max:2900,
             req: true,
         }
     });

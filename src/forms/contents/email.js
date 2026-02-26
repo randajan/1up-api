@@ -2,8 +2,8 @@
 export const fields = (define) => {
     define("main", {
         email: { type: "email", placeholder: "name@example.com", req: true },
-        subject: { type: "text" },
-        body: { type: "textarea" }
+        subject: { type: "text", max: 128 },
+        body: { type: "textarea", max: 512 }
     });
 };
 

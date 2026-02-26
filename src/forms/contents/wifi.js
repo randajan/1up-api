@@ -3,10 +3,11 @@ const escapeWifi = (value) => value?.replace(/([\\;,:"])/g, "\\$1");
 
 export const fields = (define) => {
     define("main", {
-        ssid: { type: "text", req: true },
+        ssid: { type: "text", req: true, max:64 },
         encryption: { type: "enum", enm: ["WPA", "WEP", "nopass"], fb: "WPA" },
         password: {
             type: "text",
+            max:64, 
             showIf: ({ encryption }) => encryption !== "nopass",
             req: ({ encryption }) => encryption !== "nopass"
         },

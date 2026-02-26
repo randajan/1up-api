@@ -5,20 +5,20 @@ const escapeVcard = (value) => String(value ?? "").replace(/\r\n|\r|\n|[\\,;]/g,
 
 export const fields = (define) => {
     define("main", {
-        firstName: { type: "text" },
-        lastName: { type: "text" },
-        org: { type: "text" },
-        title: { type: "text" }
+        firstName: { type: "text", max: 64 },
+        lastName:  { type: "text", max: 64 },
+        org:       { type: "text", max: 128 },
+        title:     { type: "text", max: 128 }
     });
 
     define("contact", {
-        phone: { type: "text" },
+        phone: { type: "phone", },   // +420123456789 ext 123
         email: { type: "email" },
-        url: { type: "url" }
+        url:   { type: "url" }
     });
 
     define("extra", {
-        note: { type: "textarea" }
+        note: { type: "textarea", max: 512 }
     });
 };
 

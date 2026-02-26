@@ -1,11 +1,13 @@
 import { Form } from "./class/Form";
-import { issuesDeserialize, issuesSerialize } from "./class/Issue";
+import { issuesDeserialize, issuesSerialize, issuesValidate } from "./class/Issue";
 
 export default Form;
+
 
 
 export {
     Form,
     issuesDeserialize,
-    issuesSerialize
+    issuesSerialize,
+    issuesValidate
 }

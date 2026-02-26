@@ -4,6 +4,7 @@ import { apiForm } from "../../forms/apiForm";
 import { issuesDeserialize } from "../../reforms";
 import { checkVersion } from "../version";
 
+const issueTreshold = 1;
 
 /**
  * @typedef {Object} Qr1upOptions
@@ -50,7 +51,7 @@ export class Qr1up {
         filename,
         defaults={}
     }={}) {
-        const af = apiForm.format({ fetch, rootUrl, token, filename, defaults }, { issueTreshold:1 });
+        const af = apiForm.format({ fetch, rootUrl, token, filename, defaults }, { issueTreshold });
         _privs.set(this, af.result);
     }
 
@@ -60,7 +61,7 @@ export class Qr1up {
      * @returns {{issues:Array, result?:object}}
      */
     _format(input) {
-        return configForm.format(input, { isApi:true });
+        return configForm.format(input, { issueTreshold, isApi:true });
     }
 
     /**
@@ -73,16 +74,15 @@ export class Qr1up {
      */
     async _fetch(mimeType, input={}, returnBuffer=false, throwError=true) {
         const { fetch, rootUrl, token, filename, defaults } = _privs.get(this);
-        input = {...defaults, ...input};
-        const cfg = this._format(input);
-
-        //preflight check
-        if (cfg.issues.maxLevel > 1) {
-            const { issues } = cfg;
-            return { issues };
-        }
+        let phase = "Preflight";
 
         try {
+            input = {...defaults, ...input};
+
+            //preflight local check for issues
+            this._format(input);
+
+            phase = "Fetch";
             const res = await fetch(`${rootUrl}/${token}/${filename}.${mimeType}`, {
                 method:"POST",
                 body:JSON.stringify(input),
@@ -94,12 +94,13 @@ export class Qr1up {
                 const errBody = res.status == 404 ? "Not found" : await res.text();
                 throw new Error(`API ${errBody || "fetch failed"} (${res.status})`);
             }
+
+            phase = "Remote";
             
             const headers = Object.fromEntries(res.headers.entries());
             checkVersion(rootUrl, headers["x-qr-version"]);
 
-            const issues = issuesDeserialize("x-qr-issues-", headers);
-            if (issues.maxLevel > 1) { return { issues }; }
+            const issues = issuesDeserialize("x-qr-issues-", headers, issueTreshold);
 
             if (!returnBuffer) { return { issues, body:await res.text() }; }
 
@@ -108,9 +109,10 @@ export class Qr1up {
                 : Buffer.from(await res.text(), "utf8");
                 
             return { issues, body };
-        } catch(error) {
+        } catch({ message, issues }) {
+            const error = new Error(`${phase} ${message}`);
             if (throwError) { throw error; }
-            return { error }
+            return { error, issues, phase }
         }
     }
 

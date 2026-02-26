@@ -31,3 +31,34 @@ export const fnPass = v=>v;
 
 export const isFn = fn=>typeof fn === "function";
 export const fnOnly = fn=>(isFn(fn) ? fn : null);
+
+
+export function shortenText(text, maxLength, separator = " ", threshold = 0.1) {
+  if (typeof text !== "string") return "";
+  if (text.length <= maxLength) return text;
+
+  // rezervujeme místo pro "..."
+  const ellipsis = "...";
+  const allowedLength = maxLength - ellipsis.length;
+  if (allowedLength <= 0) return ellipsis;
+
+  // první tvrdé oříznutí
+  let cut = text.slice(0, allowedLength);
+
+  // maximální povolená vzdálenost hledání zpět
+  const maxBacktrack = Math.floor(allowedLength * threshold);
+
+  // hledáme separator směrem zpět,
+  // ale jen pokud není dál než threshold
+  const lastSeparatorIndex = cut.lastIndexOf(separator);
+
+  if (
+    lastSeparatorIndex !== -1 &&
+    allowedLength - lastSeparatorIndex <= maxBacktrack &&
+    lastSeparatorIndex > 0
+  ) {
+    cut = cut.slice(0, lastSeparatorIndex);
+  }
+
+  return cut + ellipsis;
+}
