@@ -1,8 +1,9 @@
-
 import { configForm } from "../../forms/configForm";
 import { _privs } from "../vault";
 import { apiForm } from "../../forms/apiForm";
 import { issuesDeserialize } from "../../reforms";
+import { checkVersion } from "../version";
+
 
 /**
  * @typedef {Object} Qr1upOptions
@@ -82,7 +83,8 @@ export class Qr1up {
         }
 
         try {
-            const res = await fetch(`${rootUrl}/${token}/${filename}.${mimeType}`, {
+            const url = `${rootUrl}/${token}/${filename}.${mimeType}`;
+            const res = await fetch(url, {
                 method:"POST",
                 body:JSON.stringify(input),
                 headers:{ "Content-Type": "application/json" },
@@ -93,8 +95,11 @@ export class Qr1up {
                 const errBody = res.status == 404 ? "Not found" : await res.text();
                 throw new Error(`API ${errBody || "fetch failed"} (${res.status})`);
             }
+            
+            const headers = Object.fromEntries(res.headers.entries());
+            checkVersion(url, headers["x-qr-version"]);
 
-            const issues = issuesDeserialize("x-qr-issues-", Object.fromEntries(res.headers.entries()));
+            const issues = issuesDeserialize("x-qr-issues-", headers);
             if (issues.maxLevel > 1) { return { issues }; }
 
             if (!returnBuffer) { return { issues, body:await res.text() }; }

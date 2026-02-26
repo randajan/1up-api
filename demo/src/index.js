@@ -10,5 +10,5 @@ const qrApi = new Qr1up({
 
 (async _=>{
     const resp = await qrApi.svg({ contentType:"url", url:"https://1up.cz" });
-    console.log(resp);
+    console.log(resp.issues);
 })()
