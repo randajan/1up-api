@@ -83,8 +83,7 @@ export class Qr1up {
         }
 
         try {
-            const url = `${rootUrl}/${token}/${filename}.${mimeType}`;
-            const res = await fetch(url, {
+            const res = await fetch(`${rootUrl}/${token}/${filename}.${mimeType}`, {
                 method:"POST",
                 body:JSON.stringify(input),
                 headers:{ "Content-Type": "application/json" },
@@ -97,7 +96,7 @@ export class Qr1up {
             }
             
             const headers = Object.fromEntries(res.headers.entries());
-            checkVersion(url, headers["x-qr-version"]);
+            checkVersion(rootUrl, headers["x-qr-version"]);
 
             const issues = issuesDeserialize("x-qr-issues-", headers);
             if (issues.maxLevel > 1) { return { issues }; }
